@@ -1,0 +1,52 @@
+<html>
+<head>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"> </script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@1.0.0"> </script> 
+</head>
+    <title>Image Classifier</title>
+    <meta name="description" content="Transfer learning using TF.js to Classify Images.">
+    <meta name="keywords" content="Machine Learning, TensorFlow.js, Image Classification">
+    <meta name="author" content="Ojaas Hampiholi">
+<body>
+    <h1>Welcome to Image Classifier using Mobilenet</h1>
+    <p><input type="button" value="Clean" onClick="Clean()"/></p>
+    <p><input type="file"  accept="image/*" name="image" id="file"  onchange="loadFile(event)" style="display: none;"></p>
+    <p><label for="file" style="cursor: pointer;">Upload Image</label></p>
+    <p><img id="img" style='display:none'/></p>
+    <div id="throw" style="font-family:courier;font-size:24px;height=300px"></div>
+    <button id="modelrun" onclick="runModel();this.disabled=true;" disabled="disabled">run model</button>
+</body>
+
+<script>
+
+    var loadFile = function(event) {
+        var img = document.getElementById('img');
+        img.src = URL.createObjectURL(event.target.files[0]);
+        document.getElementById('img').removeAttribute('style');
+        document.getElementById('modelrun').removeAttribute('disabled');
+    };
+
+    // const img = document.getElementById('img');
+    
+    window.runModel = async function (){
+    const outp = document.getElementById('throw');
+    mobilenet.load().then(model => {
+        model.classify(img).then(predictions => {
+            console.log(predictions);
+            for(var i = 0; i<predictions.length; i++){
+                outp.innerHTML += "<br/>" + predictions[i].className + " : " + predictions[i].probability;
+            }
+        });
+    });
+    };
+    
+    function Clean(){
+      //document.getElementById('img').innerHTML = '';
+      //document.getElementById('img').setAttribute('style');
+      //document.getElementById('throw').innerHTML = '';
+      window.location.reload();
+    };
+    // onchange="loadFile(event)"
+</script>
+</html>
+
