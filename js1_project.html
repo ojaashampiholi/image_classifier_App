@@ -1,0 +1,98 @@
+<!DOCTYPE HTML>
+
+<html>
+	<head>
+		<title>Image_Classifier_App</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"> </script>
+		<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@1.0.0"> </script> 
+	</head>
+	
+	<body class="subpage">
+
+		<!-- Header -->
+			<header id="header">
+				<div class="inner">
+					<a href="index.html" class="logo"><strong>HOME</strong></a>
+					<nav id="nav">
+						<a href="js1_project.html">MobileNet Classifier</a>
+					</nav>
+					<a href="#navPanel" class="navPanelToggle"><span class="fa fa-bars"></span></a>
+				</div>
+			</header>
+
+		<!-- Three -->
+			<section id="three" class="wrapper">
+				<div class="inner">
+					<h3><strong>Welcome to Image Classifier using Mobilenet</strong></h3>
+					<p><h2>
+						MobileNet is a CNN architecture model for Image Classification and Mobile Vision.There are other models as well but 
+						what makes MobileNet special that it very less computation power to run or apply transfer learning to.This makes it a perfect fit 
+						for Mobile devices,embedded systems and computers without GPU or low computational efficiency with compromising significantly with the
+						accuracy of the results.It is also best suited for web browsers as browsers have limitation over computation,graphic processing and storage.
+						To know more about MobileNet click <a href="https://www.hindawi.com/journals/misy/2020/7602384/"><strong>here!</strong></a>
+					</h2></p>
+					<p><h2>Steps for Use:
+						<ul>
+							<li>Upload an Image using the link below</li>
+							<li>Check if the Uploaded Image is displayed properly</li>
+							<li>Click on the 'RUN MODEL' button</li>
+							<li>Wait for 5-10 seconds till the predictions are generated and displayed</li>
+							<li>To try another image, click on 'CLEAR SCREEN' Button</li>
+						</ul>
+						</h2>
+					</p>
+					<p><input type="file"  accept="image/*" name="image" id="file"  onchange="loadFile(event)" style="display: none;"></p>
+					<p><h2><label for="file" style="cursor: pointer;">Please click here to Upload Image</label></h2></p>
+					<p><img id="img" style='display:none;height:300px'/></p>
+					<div id="throw" style="font-family:courier;font-size:24px;"></div>
+					<button id="modelrun" onclick="runModel();this.disabled=true;" disabled="disabled">run model</button>
+					<p>                                                      </p>
+					<p><input type="button" value="Clear Screen" onClick="Clean()"/></p>
+				</div>
+			</section>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+			<script>
+
+				var loadFile = function(event) {
+					var img = document.getElementById('img');
+					img.height = "550";
+					img.width = "500";
+					img.src = URL.createObjectURL(event.target.files[0]);
+					document.getElementById('img').removeAttribute('style');
+					document.getElementById('modelrun').removeAttribute('disabled');
+				};
+
+				// const img = document.getElementById('img');
+				
+				window.runModel = async function (){
+				const outp = document.getElementById('throw');
+				mobilenet.load().then(model => {
+					model.classify(img).then(predictions => {
+						console.log(predictions);
+						outp.innerHTML = "The Predictions for the Uploaded Image are"
+						for(var i = 0; i<predictions.length; i++){
+							outp.innerHTML += " <br/>" + predictions[i].className + " : " + predictions[i].probability;
+						}
+					});
+				});
+				};
+				
+				function Clean(){
+				//document.getElementById('img').innerHTML = '';
+				//document.getElementById('img').setAttribute('style');
+				//document.getElementById('throw').innerHTML = '';
+				window.location.reload();
+				};
+				// onchange="loadFile(event)"
+			</script>
+
+	</body>
+</html>
